@@ -366,10 +366,33 @@ if (checkoutForm) {
 
         try {
             await writeClient.create(orderData);
-            alert("تم استقبال طلبك بنجاح! سنتصل بك قريباً لتأكيد التوصيل.");
+            
+            // Build thank you page summary
+            const summaryEl = document.getElementById('thankyou-order-summary');
+            if (summaryEl) {
+                summaryEl.innerHTML = `
+                    <h4 class="font-bold text-lg mb-3"><i class="fas fa-receipt ml-2"></i>ملخص طلبك</h4>
+                    <p class="text-gray-600 mb-2"><strong>الاسم:</strong> ${orderData.customerName}</p>
+                    <p class="text-gray-600 mb-2"><strong>الهاتف:</strong> ${orderData.phone}</p>
+                    <p class="text-gray-600 mb-4"><strong>التوصيل إلى:</strong> ${orderData.wilaya} - ${orderData.commune}</p>
+                    <div class="border-t pt-3 space-y-2">
+                        ${orderData.items.map(item => `
+                            <div class="flex justify-between text-sm text-gray-600">
+                                <span>${item.productName} ${item.size ? '(' + item.size + ')' : ''} × ${item.qty}</span>
+                                <span class="font-bold">${item.price * item.qty} دج</span>
+                            </div>
+                        `).join('')}
+                    </div>
+                    <div class="border-t mt-3 pt-3 flex justify-between font-bold text-lg">
+                        <span>المجموع:</span>
+                        <span class="text-green-600">${orderData.total} دج</span>
+                    </div>
+                `;
+            }
+
             cart = [];
             updateCartUI();
-            showView('home');
+            showView('thankyou');
             e.target.reset();
         } catch (error) {
             console.error("Order error:", error);
