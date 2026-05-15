@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Jana Elegance | متجر الأناقة</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Amiri:ital,wght@0,400;0,700;1,400;1,700&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="style.css">
+    <style>
+        body, h1, h2, h3, h4, h5, h6, p, a, button, input, select, textarea, div, span { 
+            font-family: 'Amiri', serif; 
+        }
+        .fas, .far, .fa-solid, .fa-regular {
+            font-family: 'Font Awesome 6 Free' !important;
+            font-weight: 900;
+        }
+        .fab, .fa-brands {
+            font-family: 'Font Awesome 6 Brands' !important;
+        }
+        .custom-bg { background-color: #edbfa8 !important; }
+        .insta-text {
+            background: linear-gradient(45deg, #f09433 0%, #e6683c 25%, #dc2743 50%, #cc2366 75%, #bc1888 100%);
+            background-clip: text;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            font-weight: bold;
+        }
+    </style>
+</head>
+
+<body class="bg-gray-50 text-gray-900">
+
+    <header class="custom-bg shadow-sm sticky top-0 z-50">
+        <div class="container mx-auto px-4 py-3 flex items-center justify-between">
+            <!-- Logo -->
+            <div class="flex items-center cursor-pointer" onclick="showView('home')">
+                <img src="logo.png" alt="logo.png" class="w-[100px] h-auto rounded">
+            </div>
+
+            <!-- Search Bar (Desktop) -->
+            <div class="hidden md:flex flex-1 mx-8">
+                <div class="relative w-full max-w-lg mx-auto">
+                    <input type="text" placeholder="ابحث عن منتجاتك المفضل..."
+                        class="w-full pr-10 pl-4 py-2 rounded-full border border-gray-200 focus:outline-none focus:ring-2 focus:ring-pink-500 bg-white/50 backdrop-blur-sm">
+                    <i class="fas fa-search absolute right-3 top-3 text-gray-400"></i>
+                </div>
+            </div>
+
+            <!-- Icons -->
+            <div class="flex items-center space-x-reverse space-x-4">
+                <button onclick="showView('cart')" class="relative p-2 text-gray-800 hover:text-pink-600">
+                    <i class="fas fa-shopping-cart text-xl"></i>
+                    <span id="cart-count"
+                        class="absolute -top-1 -right-1 bg-pink-600 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center">0</span>
+                </button>
+                <!-- Mobile Search Toggle -->
+                <button onclick="toggleMobileSearch()" class="md:hidden p-2 text-gray-800">
+                    <i class="fas fa-search text-xl"></i>
+                </button>
+            </div>
+        </div>
+
+        <!-- Mobile Search Bar (Hidden by default) -->
+        <div id="mobile-search-bar" class="hidden md:hidden custom-bg px-4 py-2 border-t border-gray-100/20 animate-slide-down">
+            <div class="relative">
+                <input type="text" placeholder="ابحث عن منتجاتك المفضل..."
+                    class="w-full pr-10 pl-4 py-2 rounded-lg border border-gray-200 focus:outline-none focus:ring-2 focus:ring-pink-500 bg-white/50">
+                <i class="fas fa-search absolute right-3 top-2.5 text-gray-400"></i>
+            </div>
+        </div>
+
+        <!-- Navigation Links -->
+        <nav class="bg-black/5 border-t border-gray-200/20 py-2 hidden md:block">
+            <ul class="flex justify-center space-x-reverse space-x-8 text-sm font-medium">
+                <li><a href="#" onclick="showView('home')" class="hover:text-pink-600 transition">الرئيسية</a></li>
+                <li><a href="#" onclick="showView('pages', 'delivery')"
+                        class="hover:text-pink-600 transition">التوصيل</a></li>
+                <li><a href="#" onclick="showView('pages', 'about')" class="hover:text-pink-600 transition">من نحن</a>
+                </li>
+                <li><a href="#" onclick="showView('pages', 'policy')" class="hover:text-pink-600 transition">سياسة
+                        الخصوصية</a></li>
+                <li><a href="#" onclick="showView('pages', 'contact')" class="hover:text-pink-600 transition">اتصل
+                        بنا</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <main id="main-content" class="min-h-screen">
+        <section id="view-home" class="view-content">
+            <!-- Hero Section -->
+            <div class="relative h-[300px] md:h-[500px] bg-gray-200 overflow-hidden">
+                <img id="hero-img" src="hero.png" alt="hero.png"
+                    class="w-full h-full object-cover">
+                <div class="absolute inset-0 bg-black bg-opacity-30 flex items-end justify-center text-center p-4 pb-2">
+                    <div>
+                        <h1 id="hero-title" class="text-4xl md:text-6xl font-bold text-white mb-4">أناقتك تبدأ من هنا</h1>
+                        <p id="hero-desc" class="text-lg text-white mb-6">أسعار تنافسية لأحدث الموديلات</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Product Grid -->
+            <div class="container mx-auto px-4 py-12">
+                <h2 id="products-title" class="text-3xl font-bold text-center mb-10 text-gray-800">أحدث موديلاتنا</h2>
+                <div id="product-grid" class="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-8">
+                    <!-- Products will be loaded here via JS -->
+                </div>
+            </div>
+        </section>
+
+        <section id="view-product" class="view-content hidden-view">
+            <div id="product-detail-container" class="container mx-auto px-4 py-8">
+                <!-- Product content loaded dynamically -->
+            </div>
+        </section>
+
+        <section id="view-cart" class="view-content hidden-view">
+            <div class="container mx-auto px-4 py-8">
+                <h2 class="text-3xl font-bold mb-8 text-center">سلة المشتريات</h2>
+                <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+                    <!-- Items List -->
+                    <div class="lg:col-span-2 bg-white rounded-xl shadow-sm p-6">
+                        <div id="cart-items-list" class="space-y-4">
+                            <!-- Items loaded via JS -->
+                        </div>
+                    </div>
+
+                    <!-- Checkout Form -->
+                    <div class="bg-white rounded-xl shadow-sm p-6 h-fit">
+                        <h3 class="text-xl font-bold mb-6 border-b pb-4">معلومات الطلب</h3>
+                        <form id="checkout-form" class="space-y-4">
+                            <div>
+                                <label class="block text-sm font-medium mb-1">الاسم الكامل</label>
+                                <input type="text" id="cust-name" required
+                                    class="w-full p-3 rounded-lg border focus:ring-2 focus:ring-pink-500 outline-none">
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium mb-1">رقم الهاتف</label>
+                                <input type="tel" id="cust-phone" required
+                                    class="w-full p-3 rounded-lg border focus:ring-2 focus:ring-pink-500 outline-none"
+                                    placeholder="05/06/07XXXXXXXX">
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium mb-1">الولاية (58 ولاية)</label>
+                                <select id="wilaya-select" required
+                                    class="w-full p-3 rounded-lg border focus:ring-2 focus:ring-pink-500 outline-none">
+                                    <option value="">اختر الولاية</option>
+                                    <!-- States generated via JS -->
+                                </select>
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium mb-1">العنوان بالتفصيل</label>
+                                <textarea id="cust-address" rows="2"
+                                    class="w-full p-3 rounded-lg border focus:ring-2 focus:ring-pink-500 outline-none"></textarea>
+                            </div>
+                            <div class="border-t pt-4 mt-6">
+                                <div class="flex justify-between font-bold text-lg mb-4">
+                                    <span>الإجمالي:</span>
+                                    <span id="cart-total-price">0 دج</span>
+                                </div>
+                                <button type="submit" id="submit-btn"
+                                    class="w-full bg-green-600 text-white py-4 rounded-xl font-bold text-lg hover:bg-green-700 transition">تأكيد
+                                    الطلب الآن</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="view-pages" class="view-content hidden-view">
+            <div class="container mx-auto px-4 py-16 max-w-4xl">
+                <div id="page-content" class="bg-white p-8 rounded-2xl shadow-sm prose prose-pink">
+                    <!-- Page content loaded via JS -->
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Bottom Navigation (Mobile Only) -->
+    <div id="mobile-bottom-nav" class="md:hidden fixed bottom-0 left-0 right-0 custom-bg shadow-[0_-2px_10px_rgba(0,0,0,0.05)] flex justify-around items-center py-2 z-[60] border-t border-gray-100/20">
+        <button onclick="showView('home')" class="flex flex-col items-center text-gray-800 hover:text-pink-600">
+            <i class="fas fa-store text-xl"></i>
+            <span class="text-[10px] mt-1 font-bold">المتجر</span>
+        </button>
+        <button onclick="toggleMobileMenu()" class="flex flex-col items-center text-gray-800 hover:text-pink-600">
+            <i class="fas fa-bars text-xl"></i>
+            <span class="text-[10px] mt-1 font-bold">القائمة</span>
+        </button>
+        <button onclick="showView('cart')" class="flex flex-col items-center text-gray-800 hover:text-pink-600">
+            <div class="relative">
+                <i class="fas fa-shopping-cart text-xl"></i>
+                <span id="cart-count-mobile" class="absolute -top-2 -right-2 bg-pink-600 text-white text-[10px] rounded-full w-4 h-4 flex items-center justify-center">0</span>
+            </div>
+            <span class="text-[10px] mt-1 font-bold">السلة</span>
+        </button>
+    </div>
+
+    <!-- Mobile Overlay Menu -->
+    <div id="mobile-overlay-menu" class="fixed inset-0 bg-white/95 backdrop-blur-sm z-[70] hidden flex flex-col items-center justify-center space-y-8 animate-fade-in">
+        <button onclick="toggleMobileMenu()" class="absolute top-6 right-6 text-gray-800 text-2xl">
+            <i class="fas fa-times"></i>
+        </button>
+        <a href="#" onclick="showView('home'); toggleMobileMenu()" class="text-2xl font-bold text-gray-800 hover:text-pink-600 transition">الرئيسية</a>
+        <a href="#" onclick="showView('pages', 'delivery'); toggleMobileMenu()" class="text-2xl font-bold text-gray-800 hover:text-pink-600 transition">التوصيل</a>
+        <a href="#" onclick="showView('pages', 'about'); toggleMobileMenu()" class="text-2xl font-bold text-gray-800 hover:text-pink-600 transition">من نحن</a>
+        <a href="#" onclick="showView('pages', 'policy'); toggleMobileMenu()" class="text-2xl font-bold text-gray-800 hover:text-pink-600 transition">سياسة الخصوصية</a>
+        <a href="#" onclick="showView('pages', 'contact'); toggleMobileMenu()" class="text-2xl font-bold text-gray-800 hover:text-pink-600 transition">اتصل بنا</a>
+        
+        <div class="flex space-x-reverse space-x-6 pt-8 border-t border-gray-100 w-1/2 justify-center">
+            <a href="https://www.instagram.com/jana_elegance/" target="_blank" class="text-2xl text-gray-600 hover:text-pink-500"><i class="fab fa-instagram"></i></a>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="custom-bg text-gray-900 pt-12 pb-6">
+        <div class="container mx-auto px-4">
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8 mb-8 text-center md:text-right">
+                <div>
+                    <img src="logo.png" alt="Logo" class="h-16 mx-auto md:mx-0 mb-4 rounded">
+                    <p id="footer-about" class="text-gray-800/80">وجهتك الأولى للأناقة والجمال في الجزائر. نوفر أفضل المنتجات بجودة عالية وتوصيل سريع.</p>
+                </div>
+                <div>
+                    <h3 class="text-xl font-bold mb-4">روابط سريعة</h3>
+                    <ul class="space-y-2 text-gray-800/80">
+                        <li><a href="#" onclick="showView('pages', 'policy')" class="hover:text-black">سياسة الخصوصية</a></li>
+                        <li><a href="#" onclick="showView('pages', 'delivery')" class="hover:text-black">معلومات التوصيل</a></li>
+                        <li><a href="#" onclick="showView('pages', 'about')" class="hover:text-black">من نحن</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h3 class="text-xl font-bold mb-4">تواصل معنا</h3>
+                    <div class="flex justify-center md:justify-start space-x-reverse space-x-4">
+                        <a href="https://www.instagram.com/jana_elegance/" target="_blank" class="text-2xl hover:text-pink-700"><i class="fab fa-instagram"></i></a>
+                    </div>
+                </div>
+            </div>
+            <div class="border-t border-black/10 pt-6 text-center text-gray-700 text-sm">
+                <p class="mb-2">&copy; 2026 Jana Elegance. جميع الحقوق محفوظة.</p>
+                <p>صمم من طرف فريق <a href="https://www.instagram.com/web___builder/" target="_blank" class="insta-text">Web Builder</a></p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Notification -->
+    <div id="toast"
+        class="fixed bottom-5 left-5 bg-black text-white px-6 py-3 rounded-lg shadow-xl translate-y-20 opacity-0 transition-all duration-300 z-[100]">
+        تمت الإضافة للسلة بنجاح!
+    </div>
+
+    <!-- Sanity Client -->
+    <script src="https://cdn.jsdelivr.net/npm/@sanity/client@6.15.1/dist/index.browser.js"></script>
+    <script src="config.js"></script>
+    <script src="script.js"></script>
+</body>
+
+</html>
