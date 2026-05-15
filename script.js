@@ -1,3 +1,11 @@
+const SANITY_CONFIG = {
+    projectId: '4y4ekus6',
+    dataset: 'production',
+    apiVersion: '2024-05-15',
+    useCdn: true,
+    token: 'skWhsZEie49GoOYZlOijSQ50APu1zmrlhyK0GYmRf7ncIunnD0UWp48rDc1c5mWAREIsYAdYDgtSaBry4ImRC38EjaSbb0NiVj5QZi5jjm8rAY1a56jY9pLB0y4xLTSaQzgTY9PMW2xrDkAopqdrGNuHIu0raGhAhYdnluAjK9Lh0XBhBGzM'
+};
+
 const client = sanityClient.createClient(SANITY_CONFIG);
 
 // Data Store
