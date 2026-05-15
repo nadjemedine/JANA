@@ -6,6 +6,28 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Jana Elegance | متجر الأناقة</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        brand: {
+                            50: '#fdf5f0',
+                            100: '#f9e6da',
+                            200: '#f3d0b8',
+                            300: '#edbfa8',
+                            400: '#d4a48c',
+                            500: '#c48e74',
+                            600: '#b07a62',
+                            700: '#96644e',
+                            800: '#7a5040',
+                            900: '#634236',
+                        }
+                    }
+                }
+            }
+        }
+    </script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Amiri:ital,wght@0,400;0,700;1,400;1,700&display=swap"
@@ -47,17 +69,17 @@
             <div class="hidden md:flex flex-1 mx-8">
                 <div class="relative w-full max-w-lg mx-auto">
                     <input type="text" placeholder="ابحث عن منتجاتك المفضل..."
-                        class="w-full pr-10 pl-4 py-2 rounded-full border border-gray-200 focus:outline-none focus:ring-2 focus:ring-pink-500 bg-white/50 backdrop-blur-sm">
+                        class="w-full pr-10 pl-4 py-2 rounded-full border border-gray-200 focus:outline-none focus:ring-2 focus:ring-brand-400 bg-white/50 backdrop-blur-sm">
                     <i class="fas fa-search absolute right-3 top-3 text-gray-400"></i>
                 </div>
             </div>
 
             <!-- Icons -->
             <div class="flex items-center space-x-reverse space-x-4">
-                <button onclick="showView('cart')" class="relative p-2 text-gray-800 hover:text-pink-600">
+                <button onclick="showView('cart')" class="relative p-2 text-gray-800 hover:text-brand-600">
                     <i class="fas fa-shopping-cart text-xl"></i>
                     <span id="cart-count"
-                        class="absolute -top-1 -right-1 bg-pink-600 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center">0</span>
+                        class="absolute -top-1 -right-1 bg-brand-600 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center">0</span>
                 </button>
                 <!-- Mobile Search Toggle -->
                 <button onclick="toggleMobileSearch()" class="md:hidden p-2 text-gray-800">
@@ -70,7 +92,7 @@
         <div id="mobile-search-bar" class="hidden md:hidden custom-bg px-4 py-2 border-t border-gray-100/20 animate-slide-down">
             <div class="relative">
                 <input type="text" placeholder="ابحث عن منتجاتك المفضل..."
-                    class="w-full pr-10 pl-4 py-2 rounded-lg border border-gray-200 focus:outline-none focus:ring-2 focus:ring-pink-500 bg-white/50">
+                    class="w-full pr-10 pl-4 py-2 rounded-lg border border-gray-200 focus:outline-none focus:ring-2 focus:ring-brand-400 bg-white/50">
                 <i class="fas fa-search absolute right-3 top-2.5 text-gray-400"></i>
             </div>
         </div>
@@ -78,14 +100,14 @@
         <!-- Navigation Links -->
         <nav class="bg-black/5 border-t border-gray-200/20 py-2 hidden md:block">
             <ul class="flex justify-center space-x-reverse space-x-8 text-sm font-medium">
-                <li><a href="#" onclick="showView('home')" class="hover:text-pink-600 transition">الرئيسية</a></li>
+                <li><a href="#" onclick="showView('home')" class="hover:text-brand-600 transition">الرئيسية</a></li>
                 <li><a href="#" onclick="showView('pages', 'delivery')"
-                        class="hover:text-pink-600 transition">التوصيل</a></li>
-                <li><a href="#" onclick="showView('pages', 'about')" class="hover:text-pink-600 transition">من نحن</a>
+                        class="hover:text-brand-600 transition">التوصيل</a></li>
+                <li><a href="#" onclick="showView('pages', 'about')" class="hover:text-brand-600 transition">من نحن</a>
                 </li>
-                <li><a href="#" onclick="showView('pages', 'policy')" class="hover:text-pink-600 transition">سياسة
+                <li><a href="#" onclick="showView('pages', 'policy')" class="hover:text-brand-600 transition">سياسة
                         الخصوصية</a></li>
-                <li><a href="#" onclick="showView('pages', 'contact')" class="hover:text-pink-600 transition">اتصل
+                <li><a href="#" onclick="showView('pages', 'contact')" class="hover:text-brand-600 transition">اتصل
                         بنا</a></li>
             </ul>
         </nav>
@@ -138,26 +160,31 @@
                             <div>
                                 <label class="block text-sm font-medium mb-1">الاسم الكامل</label>
                                 <input type="text" id="cust-name" required
-                                    class="w-full p-3 rounded-lg border focus:ring-2 focus:ring-pink-500 outline-none">
+                                    class="w-full p-3 rounded-lg border focus:ring-2 focus:ring-brand-400 outline-none">
                             </div>
                             <div>
                                 <label class="block text-sm font-medium mb-1">رقم الهاتف</label>
                                 <input type="tel" id="cust-phone" required
-                                    class="w-full p-3 rounded-lg border focus:ring-2 focus:ring-pink-500 outline-none"
+                                    class="w-full p-3 rounded-lg border focus:ring-2 focus:ring-brand-400 outline-none"
                                     placeholder="05/06/07XXXXXXXX">
                             </div>
                             <div>
                                 <label class="block text-sm font-medium mb-1">الولاية (58 ولاية)</label>
                                 <select id="wilaya-select" required
-                                    class="w-full p-3 rounded-lg border focus:ring-2 focus:ring-pink-500 outline-none">
+                                    class="w-full p-3 rounded-lg border focus:ring-2 focus:ring-brand-400 outline-none">
                                     <option value="">اختر الولاية</option>
                                     <!-- States generated via JS -->
                                 </select>
                             </div>
                             <div>
+                                <label class="block text-sm font-medium mb-1">البلدية</label>
+                                <input type="text" id="cust-commune" required placeholder="أدخل اسم البلدية"
+                                    class="w-full p-3 rounded-lg border focus:ring-2 focus:ring-brand-400 outline-none">
+                            </div>
+                            <div>
                                 <label class="block text-sm font-medium mb-1">العنوان بالتفصيل</label>
                                 <textarea id="cust-address" rows="2"
-                                    class="w-full p-3 rounded-lg border focus:ring-2 focus:ring-pink-500 outline-none"></textarea>
+                                    class="w-full p-3 rounded-lg border focus:ring-2 focus:ring-brand-400 outline-none"></textarea>
                             </div>
                             <div class="border-t pt-4 mt-6">
                                 <div class="flex justify-between font-bold text-lg mb-4">
@@ -176,7 +203,7 @@
 
         <section id="view-pages" class="view-content hidden-view">
             <div class="container mx-auto px-4 py-16 max-w-4xl">
-                <div id="page-content" class="bg-white p-8 rounded-2xl shadow-sm prose prose-pink">
+                <div id="page-content" class="bg-white p-8 rounded-2xl shadow-sm prose">
                     <!-- Page content loaded via JS -->
                 </div>
             </div>
@@ -185,18 +212,18 @@
 
     <!-- Bottom Navigation (Mobile Only) -->
     <div id="mobile-bottom-nav" class="md:hidden fixed bottom-0 left-0 right-0 custom-bg shadow-[0_-2px_10px_rgba(0,0,0,0.05)] flex justify-around items-center py-2 z-[60] border-t border-gray-100/20">
-        <button onclick="showView('home')" class="flex flex-col items-center text-gray-800 hover:text-pink-600">
+        <button onclick="showView('home')" class="flex flex-col items-center text-gray-800 hover:text-brand-600">
             <i class="fas fa-store text-xl"></i>
             <span class="text-[10px] mt-1 font-bold">المتجر</span>
         </button>
-        <button onclick="toggleMobileMenu()" class="flex flex-col items-center text-gray-800 hover:text-pink-600">
+        <button onclick="toggleMobileMenu()" class="flex flex-col items-center text-gray-800 hover:text-brand-600">
             <i class="fas fa-bars text-xl"></i>
             <span class="text-[10px] mt-1 font-bold">القائمة</span>
         </button>
-        <button onclick="showView('cart')" class="flex flex-col items-center text-gray-800 hover:text-pink-600">
+        <button onclick="showView('cart')" class="flex flex-col items-center text-gray-800 hover:text-brand-600">
             <div class="relative">
                 <i class="fas fa-shopping-cart text-xl"></i>
-                <span id="cart-count-mobile" class="absolute -top-2 -right-2 bg-pink-600 text-white text-[10px] rounded-full w-4 h-4 flex items-center justify-center">0</span>
+                <span id="cart-count-mobile" class="absolute -top-2 -right-2 bg-brand-600 text-white text-[10px] rounded-full w-4 h-4 flex items-center justify-center">0</span>
             </div>
             <span class="text-[10px] mt-1 font-bold">السلة</span>
         </button>
@@ -207,14 +234,14 @@
         <button onclick="toggleMobileMenu()" class="absolute top-6 right-6 text-gray-800 text-2xl">
             <i class="fas fa-times"></i>
         </button>
-        <a href="#" onclick="showView('home'); toggleMobileMenu()" class="text-2xl font-bold text-gray-800 hover:text-pink-600 transition">الرئيسية</a>
-        <a href="#" onclick="showView('pages', 'delivery'); toggleMobileMenu()" class="text-2xl font-bold text-gray-800 hover:text-pink-600 transition">التوصيل</a>
-        <a href="#" onclick="showView('pages', 'about'); toggleMobileMenu()" class="text-2xl font-bold text-gray-800 hover:text-pink-600 transition">من نحن</a>
-        <a href="#" onclick="showView('pages', 'policy'); toggleMobileMenu()" class="text-2xl font-bold text-gray-800 hover:text-pink-600 transition">سياسة الخصوصية</a>
-        <a href="#" onclick="showView('pages', 'contact'); toggleMobileMenu()" class="text-2xl font-bold text-gray-800 hover:text-pink-600 transition">اتصل بنا</a>
+        <a href="#" onclick="showView('home'); toggleMobileMenu()" class="text-2xl font-bold text-gray-800 hover:text-brand-600 transition">الرئيسية</a>
+        <a href="#" onclick="showView('pages', 'delivery'); toggleMobileMenu()" class="text-2xl font-bold text-gray-800 hover:text-brand-600 transition">التوصيل</a>
+        <a href="#" onclick="showView('pages', 'about'); toggleMobileMenu()" class="text-2xl font-bold text-gray-800 hover:text-brand-600 transition">من نحن</a>
+        <a href="#" onclick="showView('pages', 'policy'); toggleMobileMenu()" class="text-2xl font-bold text-gray-800 hover:text-brand-600 transition">سياسة الخصوصية</a>
+        <a href="#" onclick="showView('pages', 'contact'); toggleMobileMenu()" class="text-2xl font-bold text-gray-800 hover:text-brand-600 transition">اتصل بنا</a>
         
         <div class="flex space-x-reverse space-x-6 pt-8 border-t border-gray-100 w-1/2 justify-center">
-            <a href="https://www.instagram.com/jana_elegance/" target="_blank" class="text-2xl text-gray-600 hover:text-pink-500"><i class="fab fa-instagram"></i></a>
+            <a href="https://www.instagram.com/jana_elegance/" target="_blank" class="text-2xl text-gray-600 hover:text-brand-500"><i class="fab fa-instagram"></i></a>
         </div>
     </div>
 
@@ -237,7 +264,7 @@
                 <div>
                     <h3 class="text-xl font-bold mb-4">تواصل معنا</h3>
                     <div class="flex justify-center md:justify-start space-x-reverse space-x-4">
-                        <a href="https://www.instagram.com/jana_elegance/" target="_blank" class="text-2xl hover:text-pink-700"><i class="fab fa-instagram"></i></a>
+                        <a href="https://www.instagram.com/jana_elegance/" target="_blank" class="text-2xl hover:text-brand-700"><i class="fab fa-instagram"></i></a>
                     </div>
                 </div>
             </div>
@@ -254,9 +281,7 @@
         تمت الإضافة للسلة بنجاح!
     </div>
 
-    <!-- Sanity Client -->
-    <script src="https://cdn.jsdelivr.net/npm/@sanity/client@6.15.1/dist/index.browser.js"></script>
-    <script src="script.js"></script>
+    <script type="module" src="script.js"></script>
 </body>
 
 </html>

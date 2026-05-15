@@ -1,12 +1,21 @@
-const SANITY_CONFIG = {
+import { createClient } from 'https://esm.sh/@sanity/client@6.15.1';
+
+// Read-only client (no token needed for public dataset)
+const client = createClient({
     projectId: '4y4ekus6',
     dataset: 'production',
     apiVersion: '2024-05-15',
     useCdn: true,
-    token: 'skWhsZEie49GoOYZlOijSQ50APu1zmrlhyK0GYmRf7ncIunnD0UWp48rDc1c5mWAREIsYAdYDgtSaBry4ImRC38EjaSbb0NiVj5QZi5jjm8rAY1a56jY9pLB0y4xLTSaQzgTY9PMW2xrDkAopqdrGNuHIu0raGhAhYdnluAjK9Lh0XBhBGzM'
-};
+});
 
-const client = sanityClient.createClient(SANITY_CONFIG);
+// Write client (with token, used only for order creation)
+const writeClient = createClient({
+    projectId: '4y4ekus6',
+    dataset: 'production',
+    apiVersion: '2024-05-15',
+    useCdn: false,
+    token: 'skWhsZEie49GoOYZlOijSQ50APu1zmrlhyK0GYmRf7ncIunnD0UWp48rDc1c5mWAREIsYAdYDgtSaBry4ImRC38EjaSbb0NiVj5QZi5jjm8rAY1a56jY9pLB0y4xLTSaQzgTY9PMW2xrDkAopqdrGNuHIu0raGhAhYdnluAjK9Lh0XBhBGzM',
+});
 
 // Data Store
 let products = [];
@@ -71,11 +80,12 @@ async function fetchProducts() {
             sizes
         }`;
         products = await client.fetch(query);
-        console.log("Products loaded:", products.length);
+        console.log("Products loaded successfully:", products.length);
         loadProducts();
     } catch (error) {
         console.error("Error fetching products:", error);
-        document.getElementById('product-grid').innerHTML = `<p class="col-span-full text-center text-red-500 py-8">حدث خطأ أثناء جلب البيانات. يرجى المحاولة لاحقاً.</p>`;
+        const grid = document.getElementById('product-grid');
+        if (grid) grid.innerHTML = `<p class="col-span-full text-center text-red-500 py-8">حدث خطأ أثناء جلب البيانات. يرجى المحاولة لاحقاً.</p>`;
     }
 }
 
@@ -90,7 +100,7 @@ async function fetchSettings() {
             contactPhone
         }`;
         const settings = await client.fetch(query);
-        console.log("Settings loaded:", settings ? "Yes" : "No");
+        console.log("Settings fetched:", settings ? "Yes" : "No");
         if (settings) {
             if (settings.title) {
                 const titleEl = document.getElementById('hero-title');
@@ -133,7 +143,7 @@ function loadProducts() {
                 <h3 class="font-bold text-lg mb-1">${p.name}</h3>
                 <p class="text-gray-500 text-sm line-clamp-1 mb-4">${p.category || 'عام'}</p>
                 <div class="mt-auto">
-                    <button class="w-full bg-black text-white py-2.5 rounded-xl font-bold hover:bg-pink-600 transition flex items-center justify-center space-x-reverse space-x-2">
+                    <button class="w-full bg-black text-white py-2.5 rounded-xl font-bold hover:bg-brand-500 transition flex items-center justify-center space-x-reverse space-x-2">
                         <i class="fas fa-shopping-bag text-sm"></i>
                         <span>عرض التفاصيل</span>
                     </button>
@@ -148,6 +158,7 @@ function openProduct(id) {
     if (!p) return;
 
     const container = document.getElementById('product-detail-container');
+    if (!container) return;
     container.innerHTML = `
         <div class="grid grid-cols-1 md:grid-cols-2 gap-10">
             <div class="rounded-3xl overflow-hidden shadow-sm">
@@ -155,13 +166,13 @@ function openProduct(id) {
             </div>
             <div class="flex flex-col">
                 <div class="mb-8">
-                    <button onclick="showView('home')" class="text-gray-500 hover:text-pink-600 mb-6 flex items-center space-x-reverse space-x-2">
+                    <button onclick="showView('home')" class="text-gray-500 hover:text-brand-600 mb-6 flex items-center space-x-reverse space-x-2">
                         <i class="fas fa-arrow-right"></i>
                         <span>العودة للمتجر</span>
                     </button>
                     <h2 class="text-4xl font-bold mb-2">${p.name}</h2>
-                    <p class="text-3xl font-bold text-pink-600 mb-6">${p.price} دج</p>
-                    <div class="prose prose-pink text-gray-600 mb-8">
+                    <p class="text-3xl font-bold text-brand-600 mb-6">${p.price} دج</p>
+                    <div class="prose text-gray-600 mb-8">
                         ${p.description || 'لا يوجد وصف متاح.'}
                     </div>
                 </div>
@@ -171,7 +182,7 @@ function openProduct(id) {
                     <label class="block font-bold mb-3">اختر القياس:</label>
                     <div class="flex flex-wrap gap-3">
                         ${p.sizes.map(s => `
-                            <button onclick="selectSize(this, '${s}')" class="size-btn px-6 py-2 rounded-xl border-2 border-gray-100 hover:border-pink-500 transition font-bold">${s}</button>
+                            <button onclick="selectSize(this, '${s}')" class="size-btn px-6 py-2 rounded-xl border-2 border-gray-100 hover:border-brand-400 transition font-bold">${s}</button>
                         `).join('')}
                     </div>
                 </div>
@@ -179,11 +190,11 @@ function openProduct(id) {
 
                 <div class="flex gap-4">
                     <div class="flex items-center border-2 border-gray-100 rounded-xl px-4">
-                        <button onclick="changeQty(-1)" class="text-2xl hover:text-pink-500">-</button>
+                        <button onclick="changeQty(-1)" class="text-2xl hover:text-brand-500">-</button>
                         <span id="prod-qty" class="px-6 font-bold text-lg">1</span>
-                        <button onclick="changeQty(1)" class="text-2xl hover:text-pink-500">+</button>
+                        <button onclick="changeQty(1)" class="text-2xl hover:text-brand-500">+</button>
                     </div>
-                    <button onclick="addToCart('${p._id}')" class="flex-1 bg-black text-white rounded-xl font-bold text-lg hover:bg-pink-600 transition py-4">أضف إلى السلة</button>
+                    <button onclick="addToCart('${p._id}')" class="flex-1 bg-black text-white rounded-xl font-bold text-lg hover:bg-brand-500 transition py-4">أضف إلى السلة</button>
                 </div>
             </div>
         </div>
@@ -195,18 +206,20 @@ let selectedSize = '';
 let currentQty = 1;
 
 function selectSize(btn, size) {
-    document.querySelectorAll('.size-btn').forEach(b => b.classList.remove('border-pink-500', 'bg-pink-50'));
-    btn.classList.add('border-pink-500', 'bg-pink-50');
+    document.querySelectorAll('.size-btn').forEach(b => b.classList.remove('border-brand-400', 'bg-brand-50'));
+    btn.classList.add('border-brand-400', 'bg-brand-50');
     selectedSize = size;
 }
 
 function changeQty(delta) {
     currentQty = Math.max(1, currentQty + delta);
-    document.getElementById('prod-qty').innerText = currentQty;
+    const qtyEl = document.getElementById('prod-qty');
+    if (qtyEl) qtyEl.innerText = currentQty;
 }
 
 function addToCart(id) {
     const p = products.find(prod => prod._id === id);
+    if (!p) return;
     if (p.sizes && !selectedSize) {
         alert('يرجى اختيار المقاس أولاً');
         return;
@@ -233,13 +246,16 @@ function addToCart(id) {
 
 function updateCartUI() {
     const count = cart.reduce((acc, item) => acc + item.qty, 0);
-    document.getElementById('cart-count').innerText = count;
-    document.getElementById('cart-count-mobile').innerText = count;
+    const countEl = document.getElementById('cart-count');
+    const countMobileEl = document.getElementById('cart-count-mobile');
+    if (countEl) countEl.innerText = count;
+    if (countMobileEl) countMobileEl.innerText = count;
 }
 
 function renderCart() {
     const list = document.getElementById('cart-items-list');
     const totalEl = document.getElementById('cart-total-price');
+    if (!list || !totalEl) return;
 
     if (cart.length === 0) {
         list.innerHTML = `<div class="text-center py-12 text-gray-500">سلتك فارغة حالياً</div>`;
@@ -253,7 +269,7 @@ function renderCart() {
             <div class="flex-1">
                 <h4 class="font-bold">${item.name}</h4>
                 <p class="text-sm text-gray-500">${item.selectedSize ? `المقاس: ${item.selectedSize} | ` : ''}الكمية: ${item.qty}</p>
-                <p class="font-bold text-pink-600">${item.price * item.qty} دج</p>
+                <p class="font-bold text-brand-600">${item.price * item.qty} دج</p>
             </div>
             <button onclick="removeFromCart(${index})" class="text-red-500 hover:bg-red-50 p-2 rounded-lg transition">
                 <i class="fas fa-trash"></i>
@@ -273,6 +289,7 @@ function removeFromCart(index) {
 
 function showToast() {
     const toast = document.getElementById('toast');
+    if (!toast) return;
     toast.classList.remove('translate-y-20', 'opacity-0');
     setTimeout(() => {
         toast.classList.add('translate-y-20', 'opacity-0');
@@ -282,6 +299,7 @@ function showToast() {
 function initWilayas() {
     const select = document.getElementById('wilaya-select');
     if (!select) return;
+    select.innerHTML = '<option value="">اختر الولاية</option>';
     algeriaWilayas.forEach(w => {
         const opt = document.createElement('option');
         opt.value = w;
@@ -312,56 +330,75 @@ const staticPages = {
 function loadStaticPage(key) {
     const p = staticPages[key];
     const container = document.getElementById('page-content');
-    if (p) {
+    if (p && container) {
         container.innerHTML = `<h2 class="text-3xl font-bold mb-6">${p.title}</h2>${p.content}`;
     }
 }
 
 // Order Submission
-document.getElementById('checkout-form').onsubmit = async (e) => {
-    e.preventDefault();
-    const submitBtn = document.getElementById('submit-btn');
-    submitBtn.disabled = true;
-    submitBtn.innerText = "جاري إرسال الطلب...";
-    submitBtn.classList.add('bg-gray-400');
+const checkoutForm = document.getElementById('checkout-form');
+if (checkoutForm) {
+    checkoutForm.onsubmit = async (e) => {
+        e.preventDefault();
+        const submitBtn = document.getElementById('submit-btn');
+        if (!submitBtn) return;
+        submitBtn.disabled = true;
+        submitBtn.innerText = "جاري إرسال الطلب...";
+        submitBtn.classList.add('bg-gray-400');
 
-    const orderData = {
-        _type: 'order',
-        customerName: document.getElementById('cust-name').value,
-        phone: document.getElementById('cust-phone').value,
-        wilaya: document.getElementById('wilaya-select').value,
-        address: document.getElementById('cust-address').value,
-        items: cart.map(item => ({
-            _key: Math.random().toString(36).substr(2, 9),
-            productName: item.name,
-            size: item.selectedSize,
-            qty: item.qty,
-            price: item.price
-        })),
-        total: cart.reduce((acc, item) => acc + (item.price * item.qty), 0),
-        status: 'pending'
+        const orderData = {
+            _type: 'order',
+            customerName: document.getElementById('cust-name').value,
+            phone: document.getElementById('cust-phone').value,
+            wilaya: document.getElementById('wilaya-select').value,
+            commune: document.getElementById('cust-commune').value,
+            address: document.getElementById('cust-address').value,
+            items: cart.map(item => ({
+                _key: Math.random().toString(36).substr(2, 9),
+                productName: item.name,
+                size: item.selectedSize,
+                qty: item.qty,
+                price: item.price
+            })),
+            total: cart.reduce((acc, item) => acc + (item.price * item.qty), 0),
+            status: 'pending'
+        };
+
+        try {
+            await writeClient.create(orderData);
+            alert("تم استقبال طلبك بنجاح! سنتصل بك قريباً لتأكيد التوصيل.");
+            cart = [];
+            updateCartUI();
+            showView('home');
+            e.target.reset();
+        } catch (error) {
+            console.error("Order error:", error);
+            alert("عذراً، حدث خطأ أثناء إرسال الطلب. يرجى المحاولة مرة أخرى.");
+        } finally {
+            submitBtn.disabled = false;
+            submitBtn.innerText = "تأكيد الطلب الآن";
+            submitBtn.classList.remove('bg-gray-400');
+        }
     };
+}
 
-    try {
-        await client.create(orderData);
-        alert("تم استقبال طلبك بنجاح! سنتصل بك قريباً لتأكيد التوصيل.");
-        cart = [];
-        updateCartUI();
-        showView('home');
-        e.target.reset();
-    } catch (error) {
-        console.error("Order error:", error);
-        alert("عذراً، حدث خطأ أثناء إرسال الطلب. يرجى المحاولة مرة أخرى.");
-    } finally {
-        submitBtn.disabled = false;
-        submitBtn.innerText = "تأكيد الطلب الآن";
-        submitBtn.classList.remove('bg-gray-400');
-    }
-};
+// Export functions to window for HTML event handlers
+window.showView = showView;
+window.toggleMobileMenu = toggleMobileMenu;
+window.toggleMobileSearch = toggleMobileSearch;
+window.openProduct = openProduct;
+window.selectSize = selectSize;
+window.changeQty = changeQty;
+window.addToCart = addToCart;
+window.removeFromCart = removeFromCart;
+window.loadStaticPage = loadStaticPage;
 
-// Window Load
-window.onload = () => {
-    fetchProducts();
-    fetchSettings();
-    initWilayas();
-};
+// Startup
+console.log("App starting as module. Initializing data...");
+fetchProducts();
+fetchSettings();
+initWilayas();
+window.addEventListener('load', () => {
+    // Extra insurance for UI initialization
+    updateCartUI();
+});
