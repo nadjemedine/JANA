@@ -1,4 +1,5 @@
 import { createClient } from 'https://esm.sh/@sanity/client@6.15.1';
+import { toHTML } from 'https://esm.sh/@portabletext/to-html@2.0.8';
 
 // Read-only client (no token needed for public dataset)
 const client = createClient({
@@ -75,11 +76,18 @@ async function fetchProducts() {
             name,
             price,
             category,
-            "image": image.asset->url,
+            "oldImage": image.asset->url,
+            "images": images[].asset->url,
             description,
             sizes
         }`;
         products = await client.fetch(query);
+        // Normalize: merge old image into images array if images is empty
+        products = products.map(p => ({
+            ...p,
+            images: (p.images && p.images.length > 0) ? p.images : (p.oldImage ? [p.oldImage] : [])
+        }));
+
         console.log("Products loaded successfully:", products.length);
         loadProducts();
     } catch (error) {
@@ -131,10 +139,12 @@ function loadProducts() {
         grid.innerHTML = `<div class="col-span-full text-center py-12 text-gray-500">لا توجد منتجات حالياً</div>`;
         return;
     }
-    grid.innerHTML = products.map(p => `
+    grid.innerHTML = products.map(p => {
+        const mainImage = (p.images && p.images.length > 0) ? p.images[0] : 'placeholder.png';
+        return `
         <div class="bg-white rounded-2xl shadow-sm hover:shadow-md transition group h-full flex flex-col cursor-pointer" onclick="openProduct('${p._id}')">
             <div class="relative aspect-[4/5] overflow-hidden rounded-t-2xl">
-                <img src="${p.image || 'placeholder.png'}" alt="${p.name}" class="w-full h-full object-cover group-hover:scale-105 transition duration-500">
+                <img src="${mainImage}" alt="${p.name}" class="w-full h-full object-cover group-hover:scale-105 transition duration-500">
                 <div class="absolute bottom-3 right-3">
                     <span class="bg-white/90 backdrop-blur-md px-3 py-1 rounded-full text-sm font-bold shadow-sm">${p.price} دج</span>
                 </div>
@@ -150,7 +160,29 @@ function loadProducts() {
                 </div>
             </div>
         </div>
-    `).join('');
+    `;
+    }).join('');
+}
+
+function renderPortableText(blocks) {
+    if (!blocks) return 'لا يوجد وصف متاح.';
+    // Handle old plain text format (string with newlines)
+    if (typeof blocks === 'string') {
+        return blocks.split('\n').map(line => `<p>${line}</p>`).join('');
+    }
+    if (!Array.isArray(blocks)) return 'لا يوجد وصف متاح.';
+    try {
+        return toHTML(blocks);
+    } catch (e) {
+        // Fallback: render blocks as paragraphs
+        return blocks.map(block => {
+            if (block._type === 'block' && block.children) {
+                const text = block.children.map(c => c.text || '').join('');
+                return `<p>${text}</p>`;
+            }
+            return '';
+        }).join('');
+    }
 }
 
 function openProduct(id) {
@@ -159,10 +191,28 @@ function openProduct(id) {
 
     const container = document.getElementById('product-detail-container');
     if (!container) return;
+
+    const images = (p.images && p.images.length > 0) ? p.images : ['placeholder.png'];
+    const mainImage = images[0];
+    const descriptionHtml = renderPortableText(p.description);
+
+    const thumbnailsHtml = images.length > 1 ? `
+        <div class="flex gap-3 mt-4 overflow-x-auto pb-2">
+            ${images.map((img, i) => `
+                <img src="${img}" onclick="switchProductImage('${img}')" 
+                     class="w-20 h-24 object-cover rounded-xl cursor-pointer border-2 ${i === 0 ? 'border-brand-400' : 'border-transparent'} hover:border-brand-400 transition product-thumb"
+                     alt="صورة ${i + 1}">
+            `).join('')}
+        </div>
+    ` : '';
+
     container.innerHTML = `
         <div class="grid grid-cols-1 md:grid-cols-2 gap-10">
-            <div class="rounded-3xl overflow-hidden shadow-sm">
-                <img src="${p.image}" class="w-full h-auto object-cover" alt="${p.name}">
+            <div>
+                <div class="rounded-3xl overflow-hidden shadow-sm">
+                    <img id="product-main-image" src="${mainImage}" class="w-full h-auto object-cover" alt="${p.name}">
+                </div>
+                ${thumbnailsHtml}
             </div>
             <div class="flex flex-col">
                 <div class="mb-8">
@@ -172,8 +222,8 @@ function openProduct(id) {
                     </button>
                     <h2 class="text-4xl font-bold mb-2">${p.name}</h2>
                     <p class="text-3xl font-bold text-brand-600 mb-6">${p.price} دج</p>
-                    <div class="prose text-gray-600 mb-8">
-                        ${p.description || 'لا يوجد وصف متاح.'}
+                    <div class="prose text-gray-600 mb-8 leading-relaxed">
+                        ${descriptionHtml}
                     </div>
                 </div>
 
@@ -200,6 +250,16 @@ function openProduct(id) {
         </div>
     `;
     showView('product');
+}
+
+function switchProductImage(url) {
+    const mainImg = document.getElementById('product-main-image');
+    if (mainImg) mainImg.src = url;
+    // Update thumbnail borders
+    document.querySelectorAll('.product-thumb').forEach(thumb => {
+        thumb.classList.toggle('border-brand-400', thumb.src === url);
+        thumb.classList.toggle('border-transparent', thumb.src !== url);
+    });
 }
 
 let selectedSize = '';
@@ -229,7 +289,7 @@ function addToCart(id) {
         id: p._id,
         name: p.name,
         price: p.price,
-        image: p.image,
+        image: (p.images && p.images.length > 0) ? p.images[0] : 'placeholder.png',
         selectedSize: selectedSize,
         qty: currentQty
     };
@@ -414,6 +474,7 @@ window.selectSize = selectSize;
 window.changeQty = changeQty;
 window.addToCart = addToCart;
 window.removeFromCart = removeFromCart;
+window.switchProductImage = switchProductImage;
 window.loadStaticPage = loadStaticPage;
 
 // Startup
